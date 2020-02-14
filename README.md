@@ -1,3 +1,3 @@
 # robot-turtles
 Robot Turtles video game </br>
-[Technical document](rapport/rapport_tecnique.pdf)
+[Technical document](rapport/rapport_tecnique.pdf) (in french)
