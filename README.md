@@ -4,4 +4,4 @@ Robot Turtles is a board game from 2 to 4 players. </br>
 
 # Test the game
 * download the repository 
-* run Main.java
+* run src/Appli/Main.java file
