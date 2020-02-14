@@ -1,0 +1,384 @@
+\documentclass{article}
+
+% packages
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\usepackage{gensymb}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+}
+\lstset{
+  breaklines=true,
+  literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\EUR}}1 {£}{{\pounds}}1
+}
+
+\begin{document}
+
+% title page
+\begin{titlepage}
+	\begin{center}
+		\huge{\bfseries II.1102 – Projet : Robot Turtles} \\
+		\huge{\bfseries Rapport technique} \\
+		\line(1, 0){300} \\
+		[0.5cm]
+		\includegraphics[scale=0.4]{../img/background} \\
+		[0.5cm]
+		\textsc{\large Julien Colombain - David Lamy-Verdun - Dylan Hu} \\
+		[0.5cm]
+		\textsc{\large année 2019 - 2020} \\
+		[0.5cm]
+		\includegraphics[scale=0.15]{../img/logoISEP} \\
+	\end{center}
+\end{titlepage}\cleardoublepage
+
+% table of contents
+\renewcommand{\contentsname}{Table des matières}
+\tableofcontents
+\cleardoublepage
+
+% Introduction
+\section{Introduction}
+\indent Ce document technique décrit l'implémentation du jeu vidéo Robot Turtles en Java, dans le cadre du projet du module Algorithmique et Programmation (II.1102). Nous allons tout d'abord situer le contexte en rappelant les règles de ce jeu ainsi que les exigences attendues puis nous présenterons l'architecture de notre projet, la réalisation de notre interface graphique et notre implémentation du jeu.  Les structures de données utilisées ont été nommées en Anglais en respectant les conventions Java. Le jeu ainsi que les commentaires sont en français. Le code source est accessible \href{https://gitlab.com/Shinua/java_a1_turtle}{ici}.
+
+% Présentation du projet
+\section{Présentation du projet}
+	\subsection{Règles du jeu}
+\indent "Robot Turtles est un jeu de plateau conçu pour introduire des notions élémentaires de l’algorithmique à des jeunes enfants. Robot Turtles se joue de 2 à 4 joueurs, et chaque joueur incarne une tortue se déplaçant sur un plateau de taille \(8\) x \(8\). L’objectif de chaque joueur est d’amener sa tortue sur un joyau placé sur le plateau en construisant un petit algorithme. Cet algorithme est construit à l’aide de cartes qui permettent de faire avancer la tortue ou de la faire tourner d’un quart de tour vers la gauche ou la droite. Des cartes supplémentaires permettent de créer des obstacles ou de les détruire."
+Texte extrait de l'énoncé de Patrick Wang. Pour plus de détails, s'y référer \href{run:/Description_projet.pdf}{ici}.
+
+	\subsection{Travail attendu}
+\indent Notre travail consiste à développer le jeu Robot Turtles en Java en respectant les règles citées avant. De plus, le jeu doit 	être jouable pour 2 à 4 joueurs sur une interface graphique conçue et implémenter les fonctionnalités suivantes : 
+	\begin{itemize}
+  		\item initialisation du jeu
+  		\item tour de jeu
+  		\item identification de la fin d'une partie
+  		\item calcul des scores
+	\end{itemize}
+\newpage
+	
+% Architecture 
+\section{Architecture}
+	\subsection{Diagramme UML}
+\indent Notre projet est constitué de 4 packages principaux. Voici une représentation des classes développées et de leurs relations. Les attributs ainsi que les méthodes de classe n'ont pas été représentés afin de préserver la vue du lecteur.
+
+		\begin{figure}[h]
+			\begin{center}
+				\includegraphics[scale=0.21]{../UML/diagramme_UML} \\
+			\end{center}
+			\caption{Diagramme UML}
+		\end{figure}  
+	
+	\subsection{Description des classes principales}
+		\subsubsection{Deck}
+		La classe \textit{Deck} permet de modéliser le contenu du deck d'un joueur. Ce deck contient 37 cartes : 
+			\begin{itemize}
+  				\item 18 cartes bleues qui font avancer la tortue d'une case
+  				\item 8 cartes jaunes qui font tourner la tortue de 90\degree dans le sens anti-horaire
+				\item 8 cartes violettes qui font tourner la tortue de 90\degree dans le sens horaire
+				\item 3 cartes lasers qui permettent aux tortues d'utiliser leur laser pour attaquer l'obstacle devant elle
+			\end{itemize}
+
+Cette classe contient un attribut \textit{deck} qui est une \textit{ArrayList} de d'instances de la classe \textit{Card}. Le constructeur de cette classe crée un deck en lui ajoutant les cartes nécessaires dans les bonnes quantité. Pour modéliser toutes les cartes, nous avons défini une classe abstraite \textit{Card} ainsi que 5 sous-classes :  \textit{BlueCard}, \textit{PurpleCard}, \textit{YellowCard}, \textit{LaserCard} et \textit{ObstacleCard}, qui représentent respectivement les cartes bleues, violettes, jaunes, les lasers et les obstacles.  
+
+		\subsubsection{Game}
+\indent La classe \textit{Game} permet le déroulement du jeu. Elle fait appel aux classes suivantes :
+			\begin{itemize}
+  				\item \textit{Board} pour représenter le plateau de jeu
+  				\item \textit{Case} pour représenter une case sur le plateau
+				\item \textit{Player} pour représenter un joueur
+				\item \textit{Hand} pour représenter les cartes en main d'un joueur 
+			\end{itemize}
+			
+		\subsubsection{InterfaceLWJGL}
+\indent		La classe \textit{InterfaceLWJGL} constitue notre interface graphique. Elle permet la création de fenêtre est de boutons. Son fonctionnement est décrit en \hyperref[sec:interfaceGraphique]{partie 4}.
+		
+		\subsubsection{Main}
+\indent		La classe Main permet l'exécution du programme. Son fonctionnement est décrit en \hyperref[sec:game]{partie 5}.
+		
+		\subsubsection{Occupier}
+		\label{sec:occupier}
+\indent		La classe Occupier permet de modéliser un occupant sur une case, pouvant être une tortue ou un obstacle. Elle fait appel aux structures suivantes : 
+			\begin{itemize}
+  				\item Color : énumération pour représenter la couleur d'une tortue ou d'un joyau 
+  				\item Coordinate : classe pour représenter les coordonnées d'un occupant sur le plateau
+				\item Jewel : classe pour représenter les joyaux
+				\item Obstacle : classe pour représenter les obstacles
+				\item ObstacleType : énumération pour représenter le type d'obstacle (mur de glace, mur de pierre ou caisse en bois)
+				\item Orientation : énumération pour représenter l'orientation d'une tortue (nord, sud, est ou ouest)
+				\item Turtle : classe pour représenter une tortue
+			\end{itemize}
+		
+% Interface Graphique
+\section{Interface graphique}
+	\label{sec:interfaceGraphique}
+\indent Afin de réaliser l'interface graphique de notre projet, nous avons décidé d'utiliser LWJGL (LightWeightJavaGameLibrary), une librairie Java utilisée habituellement pour la réalisation de jeux.
+	Cette librairie est extrêmement vaste et comprend plusieurs bibliothèques dont GLFW qui nous a permis de réaliser notre fenêtre.
+		\begin{lstlisting}[language=Java]
+package interface_LWJGL;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+		\end{lstlisting}
+
+	\subsection{Réalisation des fenêtres}
+\indent Pour la réalisation de notre fenêtre, nous avons utilisé ces modules ci-dessus provenant tous de la librairie LWJGL. La première permet elle de faire appel au package dans lequel se situe la librairie étant donné que nous avions décider de créer un package spécifique pour cette dernière.
+\medbreak
+	\begin{lstlisting}
+public class Window {
+private int width;
+private int height;
+private String title;
+private long window;
+private Input input;
+private float backgroundR, backgroundG, backgroundB;
+private GLFWWindowSizeCallback sizeCallback;
+private boolean isResized;
+private boolean isFullScreen;
+private int[] windowPosX;
+private int[] windowPosY;
+private String whichWindow; 
+}
+	\end{lstlisting}
+\medbreak
+\indent Dans notre interface, notre fenêtre est une classe \textit{Window} comportant les attributs ci-dessus. Dans ces attributs figurents des caractéristiques que toute fenêtre possède, à savoir, une hauteur, une largeur, un titre, une couleur de fond et des booléens, un premier afin de savoir si la fenêtre est en mode fenêtré ou bien plein écran et un second afin de savoir si la fenêtre a été redimensionné. \\ 
+
+On peut aussi noter parmi ces attributs l'utilisation de deux objets de LWJGL, Input qui permet de créer des entrées pour interagir avec notre fenêtre mais aussi GLFWWindowSizeCallback qui permet de contrôler les modifications sur le redimensionnement de la fenêtre. \\ 
+
+Enfin, un attribut propre à notre projet et la chaine de caractères \textit{whichWindow} qui nous permet de savoir sur quel écran de jeu nous sommes placés, à savoir, le menu principal, le menu de sélection du nombre de joueurs ou bien le plateau de jeu.
+	\begin{lstlisting}
+/**
+ * Crée une fenêtre graphique selon une taille et un titre donné
+ * @param width, la largeur de la fenetre en pixel
+ * @param height, la hauteur de la fenetre en pixel
+ * @param title, le titre de la fenetre
+ */
+
+public Window(int width, int height, String title) {
+	this.width = width;
+	this.height = height;
+	this.title = title;
+	windowPosX = new int[1];
+	windowPosY = new int [1];
+	whichWindow = "home";
+}
+	\end{lstlisting}
+	
+Lors de l'instanciation de notre fenêtre, nous avons choisi d'utiliser en argument, deux entiers représentant respectivement largeur et hauteur et enfin une chaine de caractères spécifiant le nom. Nous avons aussi instancié notre fenêtre sur le menu principal grâce à \textit{whichWindow}. \\ 
+
+Afin d'afficher du contenu sur notre fenêtre nous nous sommes servi d'une classe nommé \textit{Texture}. Cette classe possède une méthode \textit{draw} qui nous permet de dessiner au sein de notre fenêtre les images des instances de Texture.
+	\begin{lstlisting}
+private void home() {
+	new Texture("game_title").draw(-0.5f, 1f, 0.5f, -0.28f);
+	new Texture("turtle_purple").draw(-1f, 1f, -0.7f, 0.33f);
+	new Texture("turtle_red").draw(0.7f, 1f, 1f, 0.33f);
+	new Texture("turtle_green").draw(-1f, -0.33f, -0.7f, -1f);
+	new Texture("turtle_blue").draw(0.7f, -0.33f, 1f, -1f);
+	new Texture("btn_play").draw(-0.2f, -0.46f, 0.2f, -0.61f);
+	new Texture("btn_exit").draw(-0.2f, -0.7f, 0.2f, -0.85f);
+	}
+	\end{lstlisting}
+	\medbreak
+Voici par exemple le code que nous avons utilisé pour créer l'affichage de notre menu principal. Chaque tortue est en réalité une image qui a été dessiné, de même pour le titre et les boutons "Jouer" et "Quitter". Ce ne sont que des images dessinées les unes auprès des autres et correctement agencées.  \\[2cm]
+
+\begin{figure}[h]
+\begin{center}
+	\includegraphics[scale=0.2]{../img/menu} 
+\end{center}
+\caption{Notre menu principal}
+\end{figure}  
+\newpage
+\indent La méthode \textit{draw} prend en argument les abscisses et ordonnées à partir desquelles les images devraient être dessinées et jusqu'où elles devraient l'être. Nous avons décidé d'utiliser des flottants car cela nous permet de garder des images de ratio fixes et de tailles redimensionnables à souhait. \\ 
+
+Afin de placer nos textures où on le souhaite avec ces flottants, il est nécessaire d'effectuer des conversions. \\
+
+Nous avons défini pour notre fenêtre une hauteur de 1280 et une largeur de 760, ce qui nous fait une demi-hauteur de 640 et une demi-largeur de 380. Au sein de LWJGL, la fenêtre est définie en flottant de -1 à 1 à la fois en largeur et en hauteur. -1 correspondant en largeur au bord latéral gauche et en hauteur au bord latéral bas. \\ 
+
+Voici un exemple pour le bouton "Jouer" :
+\begin{lstlisting}
+new Texture("btn_play").draw(-0.2f,-0.46f,0.2f,-0.61f);
+\end{lstlisting}
+On sait qu'en largeur, -1 représente 0 pixel et 1 représente 1280 pixels ; si l'on souhaite que notre bouton soit centré par rapport à l'axe horizontal, il est nécessaire qu'il soit dessiné autour du flottant 0. Ce qui est bien le cas : $\frac{-0.2 + 0.2}{2} = 0$. Pour les dimensions, nous procédons de la même manière, il est possible de passer de flottants à pixels : $|0.2 - (-0.2)| * 640 = 256$ et $|-0.61 - (-0.46)| * 380 = 57$. En notant respectivement X, Y, A et B, les bords gauche, droite, haut et bas de nos textures, et P la taille en pixel on peut généraliser : $(Y - X) * 640 = P$ et $(B - A) * P$.
+
+	
+	\subsection{Réalisation des boutons}
+\indent Contrairement à de nombreuses interfaces graphiques, LWJGL ne permet pas de créer des boutons. Ainsi, nos boutons se résument en réalité à de simples images auxquelles on associe une "zone active", qui lorsque sollicitée, générera une entrée. 	\\ 
+	
+Tout comme pour le menu principal, nous utilisons la méthode \textit{draw()} de la classe \textit{Texture} afin de générer le visuel de nos boutons. Suite à cela, nous utilisons des conditions sur les entrées de la souris. En effet, avec LWJGL, nous pouvons récupérer la position X en largeur et Y en hauteur du pixel sur lequel on clique. Ainsi il suffit d'utiliser des conditions afin de savoir si le clic est dans une zone de pixels correspondante à un bouton. \\
+\newpage
+Si l'on reprend l'exemple du bouton "Jouer" utilisé précédemment, nous pouvons lui ajouter une zone active afin de le transformer en bouton effectif et qu'il ne soit non plus qu'une simple image :
+\begin{lstlisting}
+if(Input.isButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT) && (Input.getMouseX() >= (8*window.getWidth()/20) && Input.getMouseX() <= (12*window.getWidth()/20) )) {
+	if(Input.getMouseY() >= (14.6*window.getHeight()/20) && Input.getMouseY() <= (16.1*window.getHeight()/20)) {
+		window.setWhichWindow("menu");
+		window.updateScreen();
+	}
+}
+\end{lstlisting}
+
+Avec la méthode \textit{isButtonDown()} de la classe \textit{Input}, il est possible de récupérer quel bouton a été utilisé. \\
+
+Ensuite nous utilisons les méthodes \textit{getMouseX()} et \textit{getMouseY()} de cette même classe pour où à eu lieu le clic. C'est ici que nous nous servons des conditions citées plus haut. \\
+
+À l'aide des méthodes \textit{getWidth()} et \textit{getHeight()} de la classe \textit{Window}, nous pouvons récupérer la taille de notre fenêtre afin d'effectuer des conversions similaires aux conversions des flottants pour délimiter une "zone active".  \\
+
+En divisant la largeur de notre fenêtre par 20, nous obtenons des portions de fenêtre dont les dimensions sont relatives à la taille de la fenêtre, comme pour les flottants. Contrairement à LWJGL qui utilise des flottants compris entre -1 à 1, nous nous servons pas de valeurs négatives pour définir les "zones actives".  Il suffit donc de convertir ces flottants en suffisant d'ajouter 1. Par ailleurs afin d'obtenir un comportement similaire à LWJGL qui découpe l'écran en 2 à partir du centre, nous avons divisé par 2 les valeurs obtenus. Ainsi $-0.2f$ correspondrait à $0.8*window.getWidth()/2$ dans notre cas, ce que nous préférons écrire $8*window.getWidth()/20$ pour plus de lisibilité et commodité.
+
+\newpage
+
+% Implémentation du jeu
+\section{Implémentation du jeu}
+	\label{sec:game}
+	\subsection{Modélisation du plateau de jeu}
+\indent Pour modéliser le plateau de jeu, nous avons développé une classe \textit{Board} contenant un tableau de 2 dimensions appelé \textit{cases} de taille \(8\) x \(8\) et une \textit{ArrayList} de coordonnées appelée \textit{occupiedPositions}. On peut ainsi stocker en mémoire la position des différents occupants sur le plateau, qu'il s'agisse d'une tortue, d'un joyau, ou d'un obstacle.
+
+	\subsection{Orientation et déplacement des tortues}
+	
+\indent Pour stocker en mémoire l'orientation des tortues, nous utilisons l'énumération \textit{Orientation}. Pour modifier l'orientation d'une tortue, on utilise la méthode \textit{setOrientation()} de la classe \textit{Turtle}. \\
+
+Pour réaliser les déplacements, on se sert du système de coordonnées afin de pouvoir modifier la case qu'occupe une tortue se déplaçant. Les méthodes \textit{getCoordX()} et \textit{getCoordY()} de la classe \textit{Turtle} nous fournissent les coordonnées d'une tortue. On les modifie donc avec les méthodes \textit{setCoordX()} et \textit{setCoordY()}. On peut ainsi déplacer une tortue sur le plateau de jeu.
+
+	\subsection{Obstacles et lasers}
+
+\indent Pour modéliser les obstacles, on utilise la classe \textit{Obstacle}, sous classe de \textit{Occupier}. On stocke en mémoire la position des obstacles de la même manière que la position des tortues. Pour identifier le type de chaque obstacle, on utilise l'énumération \textit{ObstacleType}. On peut ainsi savoir si l'obstacle est un mur de glace, de pierre ou une caisse en bois. Nous avons distingué les cartes obstacles qui restent dans la main des joueurs correspondant à la classe \textit{ObstacleCard} et les obstacles posés correspondant à la classe \textit{Obstacle}. \\
+		
+Pour le cas du laser, nous avons défini la classe \textit{LaserCard} ainsi que la méthode \textit{fireLaser()} qui permet de définir le comportement du laser face aux obstacles lorsqu'un joueur souhaite utiliser une carte laser. 
+\begin{itemize}
+\item Si le laser rencontre un mur de glace, le mur est détruit
+\item Si le laser rencontre un joyau, le laser est réflechi et frappe donc la tortue qui a tiré le laser et le renvoie à sa position initiale
+\item Si le laser touche une tortue, il la renvoie à sa position initiale
+\end{itemize}
+
+\newpage
+
+	\subsection{Initialisation du jeu}
+	
+Lors de l'initialisation du jeu, nous utilisons la méthode \textit{update()} de la classe \textit{Main} afin d'afficher le menu principal. Lors du clic sur le bouton "Jouer", cette même fonction sera appelée pour cette fois-ci afficher le menu de sélection du nombres de joueurs. En fonction du nombre de joueurs choisi on crée alors une instance de la classe \textit{Game} qui prend en argument ce nombre. Dans le constructeur de la classe \textit{Game} on appelle la méthode \textit{initPlayers()} de cette même classe qui à nouveau prend en argument le nombre de joueurs choisi. Cette méthode a pour but d'instancier le début de partie en créant le nombre de joueurs nécessaires, plaçant les tortues et enfin les joyaux. Suite à l'instanciation de notre classe \textit{Game}, on fait alors appel à la méthode \textit{launchGame()} de cette classe. Cette méthode est répétée sans arrêt jusqu'à ce que l'on décide de fermer la fenêtre, elle a pour but d'afficher l'écran de déroulement du jeu et appeler les différentes méthodes correspondant à l'action sélectionnée en fonction du bouton sollicité, \textit{completeProgram()}, \textit{buildWall()} et \textit{executeProgram()}.
+
+	\subsection{Déroulement d'un tour}
+\indent Au cours d'un tour, le joueur a le choix entre compléter son programme, construire un mur ou exécuter son programme. Il peut également à la fin de son tour faire le choix de défausser sa main pour obtenir de nouvelles cartes. Nous allons présenter les différentes fonctions permettant d'effectuer ces actions. Chacune de ces fonction prend en argument un entier faisant référence au joueur. Par exemple, 1 désigne le joueur 1.
+
+\newpage
+
+		\subsubsection{Compléter le programme}
+		
+Lorsque le joueur complète son programme, il peut cliquer sur les cartes qui sont actuellement dans sa main et visible en bas à droite de l'écran. Les cartes sélectionnées sont retirées de la main, ajoutées à l'attribut liste \textit{currentProgram} de la classe \textit{Player} et alors affichées en haut à droite de l'écran. Si le joueur veut revisiter le programme de ce tour-ci, il peut alors cliquer sur les cartes de \textit{currentProgram} pour effectuer l'action inverse, retirer les cartes de \textit{currentProgram} et les renvoyer dans sa main.
+\medbreak
+Si le joueur sélectionne le bouton "Phase suivante", les cartes de \textit{currentProgram} sont ajoutées dans le bon ordre à l'attribut liste \textit{fullProgram} de la classe \textit{Player} correspondant au programme complet du joueur qui reste à être exécuté. Une fois l'ajout des cartes effectuées, \textit{currentProgram} est alors vidée et le tour se termine.
+\medbreak
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[scale=0.3]{../img/program_complete} \\
+	\end{center}
+	\caption{Menu du joueur pour compléter son programme}
+\end{figure}  
+
+\newpage
+
+		\subsubsection{Construire un mur}
+Pour construire un mur, nous avons développé la méthode \textit{buildWall()}.
+Cette méthode est composée de deux parties.
+\\
+Tout d'abord, le joueur voit les murs qu'il lui reste à place et se doit de sélectionner lequel il veut placer. Une fois un mur sélectionné, il peut alors cliquer sur une des cases du plateau afin de placer ce dernier. Si le mur sélectionné est un mur de glace, alors ce dernier est placé si la case sélectionnée est libre sans aucune autre contrainte. En revanche, si le mur sélectionné est fait de pierre, on vérifie que ce mur n'obstrue pas le chemin grâce à la méthode \textit{isItBuildable()} ; \textit{isItBuildable()} permet de vérifier qu'il existe toujours un chemin entre :
+\begin{itemize}
+\item Une tortue et un joyau
+\item Une des positions initiales des tortues au joyau
+\end{itemize}
+\smallbreak
+\indent Pour ce faire, \textit{isItBuildable()} appelle la méthode \textit{findPath()} pour toutes les coordonnées correspondant aux positions actuelle des tortues et leurs positions initiales. \textit{findPath()} est une méthode prenant en paramètre une position de départ et déterminant un chemin jusqu'au joyau. Elle se base sur un algorithme de découverte de chemin nommmé Astar (ou A*) :
+\begin{itemize}
+\item On crée une liste de coordonnées à visiter
+\item On y met les coordonnées de la position de départ renseignées en paramètre
+\item On retire de la liste des coordonnées à visiter, les coordonnées qu'on visite actuellement
+\item On regarde les coordoonnées adjacentes, si aucun mur de pierre ne s'y trouve, on ajoute ces coordonnées à la liste des coordonnées à visiter
+\item On assigne aux prochaines coordonnées à visiter une des coordonnées de la liste des coordonnées à visiter
+\item On vérifie si les coordonnées d'un joyau appartiennent à la liste des coordonnées à visiter. Le cas échéant on retourne \textit{true}
+\item On réitère jusqu'à ce que la liste des coordonnées à visiter est vide. Si la liste est vide, on a visité toutes les coordonnées voisines disponibles sans trouver de joyau et retourne donc \textit{false}
+\end{itemize}
+
+Durant notre implémentation, nous avons dû apporter certaines modifications dues aux contraintes imposées par les choix que nous avons pris dans le développement de notre jeu. En lieu et place d'une liste des coordonnées à visiter, nous avions deux listes \textit{toVisitCoordinatesX} et \textit{toVisitCoordinatesY} correspondant respectivement aux coordonnées en X et aux coordonnées en Y à visiter et enfin un tableau de booléens de deux dimensions de taille 8*8 \textit{toVisitCoordinates} correspondant aux coordonnées à visiter. Ce tableau de booléens est initialisé rempli de \textit{false} et les booléens deviennent \textit{true} lorsque les index de la case correspondante du tableau appartiennent aux listes \textit{toVisitCoordinatesX} et \textit{toVisitCoordinatesY}.
+\medbreak
+Afin de pouvoir utiliser cet algorithme A* et donc cette méthode findPath() par l'intermédiaire de \textit{isItBuildable()}, il est nécessaire de simuler un plateau à l'état N+1 afin de déterminer si \textbf{une fois le mur placé} le joyau serait ou non toujours accessible. Pour cela, nous plaçons donc mur de pierre au clic de souris mais n'actualisons pas l'affichage. Nous nous contentons d'actualiser la liste des positions occupées et les occupants figurant dans chacune des cases à l'aide des méthodes \textit{takenCases()} et \textit{refreshCases()} de la classe \textit{Board}.
+\\ \\
+\indent Si \textit{isItBuildable()} retourne true, alors la construction du mur n'obstruerait aucun chemin et on retire alors simplement le mur de la main du joueur et passe au tour suivant ; autrement, la construction du mur obstruerait un chemin auquel cas nous retirons le mur du plateau et rafrachissons à nouveau la liste des positions occupées et les occupants figurant sur chaque case à nouveau par le biais des méthodes \textit{takenCases()} et \textit{refreshCases()} de la classe \textit{Board}. 
+\medbreak
+% Obstacles figure
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[scale=0.2]{../img/obstacles} \\
+	\end{center}
+	\caption{Menu du joueur pour choisir un obstacle}
+\end{figure}  
+
+\newpage
+
+		\subsubsection{Exécuter le programme}
+\indent Pour exécuter le programme d'un joueur, nous avons développé la fonction \textit{executeProgram()}.  Cette fonction va regarder les différentes étapes du programme exécuté. S'il y a une carte jaune, on déplace la tortue du joueur de 90\degree dans le sens anti-horaire.  S'il y a une carte violette, on déplace la tortue du joueur de \degree dans le sens horaire. S'il y a une carte bleue, on appelle la fonction \textit{obstacleEncountered()} qui vérifie l'occupant qui pourrait se trouvait dans la case en face de la tortue. Si cette case est vide, la tortue avance et se déplace d'une case. Si cette case est occupé par un obstacle qui n'est pas un joyau, la tortue n'avancera pas adoptera un comportement différent en fonction de l'obstacle. \\
+Si l'obstacle n'est pas un joyau, deux choix s'offrent alors, soit l'obstacle est un mur, ou bien une tortue :
+\begin{itemize}
+\item Dans le cas d'un mur : la tortue effectue sur elle-même une rotation de $180^\circ$.
+\item Dans le cas d'une tortue : les deux tortues, la tortue courante et la tortue rencontrée, font tous deux un tour de $180^\circ$ sur elles-même.
+\end{itemize} 
+
+% Program execution figure
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.2]{../img/programme_execution} \\
+	\end{center}
+	\caption{Menu du joueur lorsque son programme est exécuté}
+\end{figure}
+
+\newpage
+
+		\subsubsection{Défausser sa main}  
+\indent Pour défausser sa main, nous avons développé la fonction \textit{discardCards()}. Cette fonction est appelée après chaque fin d'action, que ce soit après  \textit{executeProgram()},  \textit{completeProgram()} ou  \textit{buildWall()}. On affiche ensuite deux boutons et on crée deux zones actives :   "Défausser" ou sur "Ne pas défausser". Si le joueur appuie sur "Défausser",  toutes les cartes de \textit{Hand} sont ajouté à la défausse et sa main est vidée. Si le joueur clique sur "Ne pas défausser", il ne se passe rien. 
+À chaque fin de tour, on exécute la fonction \textit{endTurn()} qui appelle \textit{drawHand()} qui va compléter la main du joueur. Ainsi, si le joueur a défaussé sa main et qu'elle est vide, il va piocher 5 cartes. S'il n'a pas défaussé, il pioche un nombre de cartes jusqu'à en avoir 5 dans sa main. Ces cartes là provenant du deck, dans le cas où il est vide, on place la défausse du joueur et la remet dans son deck.
+\medbreak
+%.Discard figure
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.2]{../img/discard_hand_screenshot} \\
+	\end{center}
+	\caption{Menu du joueur pour défausser sa main}
+\end{figure}
+\newpage
+
+	\subsection{Identification de fin d'une partie et scores}
+\indent Nous avons fait le choix d'arrêter une partie dès qu'une des tortues atteint son joyau. Pour réaliser cela, nous déclarons un booléen \textit{victory()}, initialisé à false ainsi qu'une méthode \textit{isVictory()} qui renvoie la valeur de ce booléen. Chaque fois qu'un joueur exécute son programme, la fonction \textit{executeProgram()} est appelé. Lorsque le programme contient une carte bleue qui fait avancer la tortue, la fonction \textit{obstacleEncountered()} a pour rôle de regarder l'occupant qui se trouve dans la case devant la tortue. Si c'est le joyau correspondant à la tortue,  \textit{victory()} devient  \textit{false}. Le jeu se trouvant dans une boucle  \textit{while(!isVictory)}, cela marque ainsi la condition d'arrêt et le jeu se termine. On obtient ainsi le message suivant en fonction du numéro du joueur qui a gagné.
+\vspace{8mm}
+\par
+
+% Victory message figure
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[scale=0.6]{../img/victory1} 
+	\end{center}
+	\caption{Message de victoire}
+\end{figure}  
+
+\section{Conclusion}
+
+Robots Turtles est un projet relativement intéressant qui permet d'appréhender la notions de classes et ainsi la programmation orientée objet. Ce projet a aussi été l'occasion de se familiariser avec Git, un outil indispensable pour une bonne cohésion d'équipe, et l'opportunité de se pencher sur la création d'une interface graphique.
+
+
+\end{document}

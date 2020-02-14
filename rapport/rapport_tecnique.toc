@@ -1,0 +1,27 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}Présentation du projet}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Règles du jeu}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Travail attendu}{2}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Architecture}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Diagramme UML}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Description des classes principales}{3}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Deck}{3}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Game}{4}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}InterfaceLWJGL}{4}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Main}{4}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Occupier}{4}{subsubsection.3.2.5}%
+\contentsline {section}{\numberline {4}Interface graphique}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Réalisation des fenêtres}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Réalisation des boutons}{8}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Implémentation du jeu}{10}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Modélisation du plateau de jeu}{10}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Orientation et déplacement des tortues}{10}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Obstacles et lasers}{10}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Initialisation du jeu}{11}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Déroulement d'un tour}{11}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Compléter le programme}{12}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Construire un mur}{13}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}Exécuter le programme}{15}{subsubsection.5.5.3}%
+\contentsline {subsubsection}{\numberline {5.5.4}Défausser sa main}{16}{subsubsection.5.5.4}%
+\contentsline {subsection}{\numberline {5.6}Identification de fin d'une partie et scores}{17}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Conclusion}{17}{section.6}%
