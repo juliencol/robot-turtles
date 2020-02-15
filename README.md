@@ -10,9 +10,9 @@ We implemented our version of the game in 5 months in a team of 3. To learn more
 ```bash 
 java -version 
 ```
-* Clone the repository 
+* Clone or download the repository 
 ```bash 
-git@github.com:juliencol/robot-turtles.git
+git clone git@github.com:juliencol/robot-turtles.git
 ```
 * Compile and run the src/Appli/Main.java file
 ```bash 
