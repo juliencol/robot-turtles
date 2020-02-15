@@ -10,5 +10,12 @@ We implemented our version of the game in 5 months in a team of 3. To learn more
 ```bash 
 java -version 
 ```
-* Download the repository 
-* Run the src/Appli/Main.java file
+* Clone the repository 
+```bash 
+git@github.com:juliencol/robot-turtles.git
+```
+* Compile and run the src/Appli/Main.java file
+```bash 
+cd robot-turtles/src/Appli 
+javac Main.java && java Main.java
+```
